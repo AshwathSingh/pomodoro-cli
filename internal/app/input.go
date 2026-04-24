@@ -8,7 +8,7 @@ import (
 	"golang.org/x/term"
 )
 
-func GetInput() byte {
+func getInput() byte {
 	// opens the terminal
 	f, err := os.OpenFile("/dev/tty", os.O_RDWR, 0)
 
