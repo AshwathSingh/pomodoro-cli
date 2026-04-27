@@ -1,23 +1,46 @@
 package main
 
 import (
-	"flag"
 	"fmt"
+	"log"
 	"strings"
 
 	"time"
 )
 
 func main() {
-	timePtr := flag.Int("pomo", 25, "pomodoro work section")
-	breakPtr := flag.Int("break", 5, "break section")
 
-	flag.Parse()
+	fmt.Printf("(1) 25 / 5 \n(2) 50 / 10 \n(3) custom\n")
+	var inputOption int
 
+	_, err := fmt.Scan(&inputOption)
 
+	fmt.Print("\033[F\033[K")
+	if err != nil {
+		log.Fatal("error inputting information")
+		return
+	}
 
-	startSession("FOCUS", int64(*timePtr))
-	startSession("BREAK", int64(*breakPtr))
+	var timeFocus int64
+	var timeBreak int64
+
+	timeFocus = 0
+	timeBreak = 0
+
+	switch inputOption {
+	case 1:
+		timeFocus = 25
+		timeBreak = 5
+	case 2:
+		timeFocus = 50
+		timeBreak = 10
+	case 3:
+		panic("not implemented")
+	default:
+		log.Fatal("invalid option")
+	}
+	startSession("FOCUS", timeFocus)
+	startSession("BREAK", timeBreak)
 
 }
 
