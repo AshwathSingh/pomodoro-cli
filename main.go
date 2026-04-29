@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/AshwathSingh/pomodoro-cli/ui"
 )
@@ -34,11 +35,26 @@ func main() {
 		timeFocus = 50
 		timeBreak = 10
 	case 3:
-		panic("not implemented")
+		customInput(&timeFocus, &timeBreak)
 	default:
 		log.Fatal("invalid option")
 	}
+
+	os.Stdout.Sync()
 	ui.StartSession("FOCUS", timeFocus)
 	ui.StartSession("BREAK", timeBreak)
+
+}
+
+func customInput(timeFocus, timeBreak *int64) {
+	fmt.Println("how long do you want to focus for?")
+	fmt.Scan(timeFocus)
+	fmt.Print("\033[F\033[K")
+	fmt.Print("\033[F\033[K")
+
+	fmt.Println("how long do you want to rest for?")
+	fmt.Scan(timeBreak)
+	fmt.Print("\033[F\033[K")
+	fmt.Print("\033[F\033[K")
 
 }
