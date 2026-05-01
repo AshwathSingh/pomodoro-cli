@@ -11,6 +11,7 @@ import (
 // - addding task functionality (novelty feature not really core feature)
 // - ensuring that time elapsed and the progress bar exist on different lines
 
+// StartSession starts a focus session with the given label and duration in minutes
 func StartSession(label string, durationMinutes int64) {
 	total := time.Duration(durationMinutes) * time.Minute
 	start := time.Now()
@@ -32,6 +33,7 @@ func StartSession(label string, durationMinutes int64) {
 		elapsedMin := int(elapsed.Minutes())
 		elapsedSec := int(elapsed.Seconds()) % 60
 
+		// clear the line and render the progress bar
 		fmt.Printf(
 			"\r START: %s | ELAPSED: %02d:%02d | %s",
 			startStr,
