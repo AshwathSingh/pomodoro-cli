@@ -42,6 +42,13 @@ func main() {
 	ui.ClearScreen()
 	os.Stdout.Sync()
 	ui.StartSession("FOCUS", timeFocus)
+	fmt.Printf("\033[F\033[K")
+	fmt.Print("do you want to take a break? (y/n) ")
+	var takeBreak string
+	fmt.Scan(&takeBreak)
+	if takeBreak != "y" {
+		return
+	}
 	ui.StartSession("BREAK", timeBreak)
 
 }
@@ -76,7 +83,6 @@ func customInput(timeFocus, timeBreak *int64) {
 	if *timeBreak < 0 {
 		fmt.Println("please re-enter the break time")
 		fmt.Scan(timeBreak)
-
 		ui.DeleteLines()
 	}
 }

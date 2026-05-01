@@ -33,9 +33,7 @@ func StartSession(label string, durationMinutes int64) {
 		elapsedSec := int(elapsed.Seconds()) % 60
 
 		fmt.Printf(
-			"\r%s: %d | START: %s | ELAPSED: %02d:%02d | %s",
-			label,
-			durationMinutes,
+			"\r START: %s | ELAPSED: %02d:%02d | %s",
 			startStr,
 			elapsedMin,
 			elapsedSec,
