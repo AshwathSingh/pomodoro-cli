@@ -21,38 +21,41 @@ func StartSession(label string, durationMinutes int64) {
 
 	for {
 		elapsed := time.Since(start)
+
 		if elapsed >= total {
 			break
 		}
-
-		progress := float64(elapsed) / float64(total)
-
-		bar := RenderBar(progress, width)
-
-		// elapsed time formatting
-		elapsedMin := int(elapsed.Minutes())
-		elapsedSec := int(elapsed.Seconds()) % 60
-
 		// clear the line and render the progress bar
-		fmt.Printf(
-			"\r START: %s | ELAPSED: %02d:%02d | %s",
+		printProgress(
 			startStr,
-			elapsedMin,
-			elapsedSec,
-			bar,
+			elapsed,
+			total,
+			width,
 		)
 
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	// final state
-	elapsed := total
+	printProgress(
+		startStr,
+		total,
+		total,
+		width,
+	)
+
+}
+
+// printProgress renders the progress bar for the current session
+func printProgress(startStr string, elapsed time.Duration, total time.Duration, width int) {
+	progress := float64(elapsed) / float64(total)
+	bar := RenderBar(progress, width)
+
 	fmt.Printf(
-		"\r%s | START: %s | ELAPSED: %02d:%02d | %s\n",
-		label,
+		"\r START: %s | ELAPSED: %02d:%02d | %s",
 		startStr,
 		int(elapsed.Minutes()),
 		int(elapsed.Seconds())%60,
-		RenderBar(1.0, width),
+		bar,
 	)
 }
