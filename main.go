@@ -39,7 +39,7 @@ func main() {
 		timeFocus = 50
 		timeBreak = 10
 	case 3:
-		customInput(&timeFocus, &timeBreak)
+		ui.CustomInput(&timeFocus, &timeBreak)
 	default:
 		log.Fatal("invalid option")
 	}
@@ -49,46 +49,14 @@ func main() {
 	os.Stdout.Sync()
 	ui.StartSession("FOCUS", timeFocus)
 	fmt.Printf("\033[F\033[K")
+
 	fmt.Print("do you want to take a break? (y/n) ")
 	var takeBreak string
 	fmt.Scan(&takeBreak)
+
 	if takeBreak != "y" {
 		return
 	}
 	ui.StartSession("BREAK", timeBreak)
 
-}
-
-// function for case 3 of input, wherein the user wants to use a custom focus session
-// takes in timeFocus and timeBreak as pointers to update them in the main function caller
-// to be implemented: ensuring that input passed in is correct, and not negative
-func customInput(timeFocus, timeBreak *int64) {
-	ui.DeleteLines()
-	fmt.Print("\033[F\033[K")
-
-	fmt.Println("Custom Pomodoro Set-Up")
-	fmt.Println("how long do you want to focus for?")
-	fmt.Scan(timeFocus)
-
-	ui.DeleteLines()
-
-	// checking the input to ensure it is not negative
-	if *timeFocus < 0 {
-		fmt.Println("please re-enter the focus time")
-		fmt.Scan(timeFocus)
-
-		ui.DeleteLines()
-	}
-
-	fmt.Println("how long do you want to rest for?")
-	fmt.Scan(timeBreak)
-
-	ui.DeleteLines()
-
-	// checking the input to ensure it is not negative
-	if *timeBreak < 0 {
-		fmt.Println("please re-enter the break time")
-		fmt.Scan(timeBreak)
-		ui.DeleteLines()
-	}
 }
