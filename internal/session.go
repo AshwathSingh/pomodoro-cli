@@ -1,8 +1,10 @@
-package ui
+package internal
 
 import (
 	"fmt"
 	"time"
+
+	"github.com/AshwathSingh/pomodoro-cli/ui"
 )
 
 // to be implemented
@@ -49,7 +51,7 @@ func StartSession(label string, durationMinutes int64) {
 // printProgress renders the progress bar for the current session
 func printProgress(startStr string, elapsed time.Duration, total time.Duration, width int) {
 	progress := float64(elapsed) / float64(total)
-	bar := RenderBar(progress, width)
+	bar := ui.RenderBar(progress, width)
 
 	fmt.Printf(
 		"\r START: %s | ELAPSED: %02d:%02d | %s",

@@ -4,8 +4,13 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/AshwathSingh/pomodoro-cli/internal"
 	"github.com/AshwathSingh/pomodoro-cli/ui"
 )
+
+// initialize timeFocus and timeBreak variables
+var timeFocus int64
+var timeBreak int64
 
 func main() {
 
@@ -21,13 +26,6 @@ func main() {
 		log.Fatal("error inputting information")
 		return
 	}
-
-	// initialize timeFocus and timeBreak variables
-	var timeFocus int64
-	var timeBreak int64
-
-	timeFocus = 0
-	timeBreak = 0
 
 	// switch statement to set timeFocus and timeBreak based on user input
 	switch inputOption {
@@ -47,5 +45,5 @@ func main() {
 		log.Fatal("invalid option")
 	}
 
-	ui.PomodoroSession(timeFocus, timeBreak)
+	internal.PomodoroSession(timeFocus, timeBreak)
 }
