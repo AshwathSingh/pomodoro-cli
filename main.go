@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/AshwathSingh/pomodoro-cli/ui"
 )
@@ -44,19 +43,5 @@ func main() {
 		log.Fatal("invalid option")
 	}
 
-	// clear the screen and start the focus session
-	ui.ClearScreen()
-	os.Stdout.Sync()
-	ui.StartSession("FOCUS", timeFocus)
-	fmt.Printf("\033[F\033[K")
-
-	fmt.Print("do you want to take a break? (y/n) ")
-	var takeBreak string
-	fmt.Scan(&takeBreak)
-
-	if takeBreak != "y" {
-		return
-	}
-	ui.StartSession("BREAK", timeBreak)
-
+	ui.PomodoroSession(timeFocus, timeBreak)
 }
