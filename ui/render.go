@@ -3,17 +3,8 @@ package ui
 import (
 	"fmt"
 	"strings"
+	"time"
 )
-
-// RenderBar renders a progress bar with the given progress and width
-func RenderBar(progress float64, width int) string {
-	filled := int(progress * float64(width))
-
-	bar := strings.Repeat("█", filled) +
-		strings.Repeat("░", width-filled)
-
-	return "[" + bar + "]"
-}
 
 // function for case 3 of input, wherein the user wants to use a custom focus session
 // takes in timeFocus and timeBreak as pointers to update them in the main function caller
@@ -45,12 +36,41 @@ func CustomInput(timeFocus, timeBreak *int64) {
 		fmt.Scan(timeBreak)
 	}
 
-	fmt.Print("\033[F\033[K")
-	DeleteLines()
+	ClearScreen()
+}
+
+// printProgress renders the progress bar for the current session
+func PrintProgress(startStr string, elapsed time.Duration, total time.Duration, width int) {
+	progress := float64(elapsed) / float64(total)
+	bar := renderBar(progress, width)
+
+	fmt.Printf(
+		"\rSTART: %s | ELAPSED: %02d:%02d | %s",
+		startStr,
+		int(elapsed.Minutes()),
+		int(elapsed.Seconds())%60,
+		bar,
+	)
+}
+
+// RenderBar renders a progress bar with the given progress and width
+func renderBar(progress float64, width int) string {
+	filled := int(progress * float64(width))
+
+	bar := strings.Repeat("█", filled) +
+		strings.Repeat("░", width-filled)
+
+	return "[" + bar + "]"
 }
 
 // DeleteLines deletes two lines from the terminal
 func DeleteLines() {
+	fmt.Print("\033[F\033[K")
+	fmt.Print("\033[F\033[K")
+}
+
+func ClearScreen() {
+	fmt.Print("\033[F\033[K")
 	fmt.Print("\033[F\033[K")
 	fmt.Print("\033[F\033[K")
 }

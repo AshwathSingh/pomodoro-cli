@@ -22,6 +22,7 @@ func main() {
 	_, err := fmt.Scan(&inputOption)
 
 	fmt.Print("\033[F\033[K")
+
 	if err != nil {
 		log.Fatal("error inputting information")
 		return
@@ -32,13 +33,11 @@ func main() {
 	case 1:
 		timeFocus = 25
 		timeBreak = 5
-		fmt.Print("\033[F\033[K")
-		ui.DeleteLines()
+		ui.ClearScreen()
 	case 2:
 		timeFocus = 50
 		timeBreak = 10
-		fmt.Print("\033[F\033[K")
-		ui.DeleteLines()
+		ui.ClearScreen()
 	case 3:
 		ui.CustomInput(&timeFocus, &timeBreak)
 	default:
