@@ -7,7 +7,7 @@ import (
 
 func PomodoroSession(timeFocus, timeBreak int64) {
 	// clear the screen and start the focus session
-	ClearScreen()
+	// DeleteLines()
 	os.Stdout.Sync()
 	StartSession("FOCUS", timeFocus)
 	fmt.Printf("\033[F\033[K")

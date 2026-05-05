@@ -34,9 +34,13 @@ func main() {
 	case 1:
 		timeFocus = 25
 		timeBreak = 5
+		fmt.Print("\033[F\033[K")
+		ui.DeleteLines()
 	case 2:
 		timeFocus = 50
 		timeBreak = 10
+		fmt.Print("\033[F\033[K")
+		ui.DeleteLines()
 	case 3:
 		ui.CustomInput(&timeFocus, &timeBreak)
 	default:

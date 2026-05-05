@@ -26,8 +26,6 @@ func CustomInput(timeFocus, timeBreak *int64) {
 	fmt.Println("how long do you want to focus for?")
 	fmt.Scan(timeFocus)
 
-	DeleteLines()
-
 	// checking the input to ensure it is not negative
 	if *timeFocus < 0 {
 		fmt.Println("please re-enter the focus time")
@@ -45,19 +43,14 @@ func CustomInput(timeFocus, timeBreak *int64) {
 	if *timeBreak < 0 {
 		fmt.Println("please re-enter the break time")
 		fmt.Scan(timeBreak)
-		DeleteLines()
 	}
+
+	fmt.Print("\033[F\033[K")
+	DeleteLines()
 }
 
 // DeleteLines deletes two lines from the terminal
 func DeleteLines() {
-	fmt.Print("\033[F\033[K")
-	fmt.Print("\033[F\033[K")
-}
-
-// ClearScreen clears the screen by printing newline characters and clearing the line
-func ClearScreen() {
-	fmt.Print("\033[F\033[K")
 	fmt.Print("\033[F\033[K")
 	fmt.Print("\033[F\033[K")
 }
