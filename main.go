@@ -4,16 +4,19 @@ import (
 	"fmt"
 	"log"
 
+
 	"github.com/AshwathSingh/pomodoro-cli/internal"
 	"github.com/AshwathSingh/pomodoro-cli/ui"
+	"github.com/AshwathSingh/pomodoro-cli/model"
 )
 
 // initialize timeFocus and timeBreak variables
-var timeFocus int64
-var timeBreak int64
+// TODO - implement this as a struct with functions to access the
+// variables as good practice
 
 func main() {
 
+	pomodoro := model.Time{0,0}
 	// menu to select focus session type
 	fmt.Printf("(1) 25 / 5 \n(2) 50 / 10 \n(3) custom\n")
 	var inputOption int
@@ -28,21 +31,21 @@ func main() {
 		return
 	}
 
-	// switch statement to set timeFocus and timeBreak based on user input
+	// switch statement to set focus and break based on user input
 	switch inputOption {
 	case 1:
-		timeFocus = 25
-		timeBreak = 5
+		pomodoro.Focus = 25
+		pomodoro.Break = 5
 		ui.ClearScreen()
 	case 2:
-		timeFocus = 50
-		timeBreak = 10
+		pomodoro.Focus = 50
+		pomodoro.Break = 10
 		ui.ClearScreen()
 	case 3:
-		ui.CustomInput(&timeFocus, &timeBreak)
+		ui.CustomInput(&pomodoro)
 	default:
 		log.Fatal("invalid option")
 	}
 
-	internal.PomodoroSession(timeFocus, timeBreak)
+	internal.PomodoroSession(&pomodoro)
 }

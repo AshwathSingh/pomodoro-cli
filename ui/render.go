@@ -4,51 +4,53 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
+	"github.com/AshwathSingh/pomodoro-cli/model"
 )
 
 // function for case 3 of input, wherein the user wants to use a custom focus session
-// takes in timeFocus and timeBreak as pointers to update them in the main function caller
-// to be implemented: ensuring that input passed in is correct, and not negative
-func CustomInput(timeFocus, timeBreak *int64) {
+// takes in a pointer to internal.Time to update values in the caller
+// to be implemented: further validation on inputs
+func CustomInput(pomodoro *model.Time) {
 	DeleteLines()
 	fmt.Print("\033[F\033[K")
 
 	fmt.Println("Custom Pomodoro Set-Up")
 	fmt.Println("how long do you want to focus for?")
-	fmt.Scan(timeFocus)
+	fmt.Scan(&pomodoro.Focus)
 
 	// checking the input to ensure it is not negative
-	if *timeFocus < 0 {
+	if pomodoro.Focus < 0 {
 		fmt.Println("please re-enter the focus time")
-		fmt.Scan(timeFocus)
+		fmt.Scan(&pomodoro.Focus)
 
 		DeleteLines()
 	}
 
 	fmt.Println("how long do you want to rest for?")
-	fmt.Scan(timeBreak)
+	fmt.Scan(&pomodoro.Break)
 
 	DeleteLines()
 
 	// checking the input to ensure it is not negative
-	if *timeBreak < 0 {
+	if pomodoro.Break < 0 {
 		fmt.Println("please re-enter the break time")
-		fmt.Scan(timeBreak)
+		fmt.Scan(&pomodoro.Break)
 	}
 
 	ClearScreen()
 }
 
 // printProgress renders the progress bar for the current session
-func PrintProgress(startStr string, elapsed time.Duration, total time.Duration, width int) {
+func PrintProgress(startStr string, countdown time.Duration, elapsed time.Duration, total time.Duration, width int) {
 	progress := float64(elapsed) / float64(total)
 	bar := renderBar(progress, width)
 
 	fmt.Printf(
 		"\rSTART: %s | ELAPSED: %02d:%02d | %s",
 		startStr,
-		int(elapsed.Minutes()),
-		int(elapsed.Seconds())%60,
+		int(countdown.Minutes()),
+		int(countdown.Seconds())%60,
 		bar,
 	)
 }
