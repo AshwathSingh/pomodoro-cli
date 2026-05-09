@@ -1,8 +1,11 @@
 package internal
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/AshwathSingh/pomodoro-cli/model"
 )
@@ -17,18 +20,26 @@ func PomodoroSession(t *model.Time) {
 		panic("nil Time passed to PomodoroSession")
 	}
 
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	os.Stdout.Sync()
-	StartSession("FOCUS", t.Focus)
-	fmt.Printf("\033[F\033[K")
+	// catch interrupt/terminate
+	sig := make(chan os.Signal, 1)
+	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-sig
+		cancel()
+	}()
 
-	fmt.Print("do you want to take a break? (y/n) ")
-	var takeBreak string
-	fmt.Scan(&takeBreak)
-
-	if takeBreak != "y" {
-		return
+	// alternate sessions until ctx is cancelled
+	for ctx.Err() == nil {
+		StartSession("FOCUS", t.Focus, ctx)
+		if ctx.Err() != nil {
+			break
+		}
+		StartSession("BREAK", t.Break, ctx)
 	}
 
-	StartSession("BREAK", t.Break)
+	// optional: cleanup/readable exit message
+	fmt.Println("\nSession cancelled — exiting.")
 }
