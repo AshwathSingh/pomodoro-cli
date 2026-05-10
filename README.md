@@ -8,4 +8,4 @@ I saw this pomodoro-cli tool in a BashBunni Stream and was really interested to 
 - [ ] Add functionality:
   - [ ] Allow interrupting a focus session to switch between break and focus modes (partial implementation - currently able to cancel a session)
   - [ ] Add notification when a session is completed
-  - [ ] Enable infinite repetitions for both break and focus sessions
+  - [X] Enable infinite repetitions for both break and focus sessions
