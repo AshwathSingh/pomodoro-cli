@@ -19,35 +19,21 @@ func CustomInput(pomodoro *model.Time) {
 	fmt.Println("how long do you want to focus for?")
 	fmt.Scan(&pomodoro.Focus)
 
-	// checking the input to ensure it is not negative
-	if pomodoro.Focus < 0 {
-		fmt.Println("please re-enter the focus time")
-		fmt.Scan(&pomodoro.Focus)
-
-		DeleteLines()
-	}
-
 	fmt.Println("how long do you want to rest for?")
 	fmt.Scan(&pomodoro.Break)
 
 	DeleteLines()
-
-	// checking the input to ensure it is not negative
-	if pomodoro.Break < 0 {
-		fmt.Println("please re-enter the break time")
-		fmt.Scan(&pomodoro.Break)
-	}
-
 	ClearScreen()
 }
 
 // printProgress renders the progress bar for the current session
-func PrintProgress(startStr string, countdown time.Duration, elapsed time.Duration, total time.Duration, width int) {
+func PrintProgress(label string, startStr string, countdown time.Duration, elapsed time.Duration, total time.Duration, width int) {
 	progress := float64(elapsed) / float64(total)
 	bar := renderBar(progress, width)
 
 	fmt.Printf(
-		"\rSTART: %s | ELAPSED: %02d:%02d | %s",
+		"\r%s | START: %s | ELAPSED: %02d:%02d | %s",
+		label,
 		startStr,
 		int(countdown.Minutes()),
 		int(countdown.Seconds())%60,
