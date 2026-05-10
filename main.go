@@ -37,8 +37,8 @@ func main() {
 		pomodoro.SetBreak(5)
 		ui.ClearScreen()
 	case 2:
-		pomodoro.SetFocus(25)
-		pomodoro.SetBreak(25)
+		pomodoro.SetFocus(50)
+		pomodoro.SetBreak(10)
 		ui.ClearScreen()
 	case 3:
 		ui.CustomInput(&pomodoro)
