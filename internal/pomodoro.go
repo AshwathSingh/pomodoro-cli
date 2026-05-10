@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/AshwathSingh/pomodoro-cli/model"
 	"github.com/AshwathSingh/pomodoro-cli/ui"
@@ -22,37 +21,58 @@ func PomodoroSession(t *model.Time) {
 	var initial int8 = 0
 
 	for stop != 1 {
-		os.Stdout.Sync()
 
 		if initial == 1 {
-			fmt.Println("\n do you want to start another focus session (y / n)")
-			var takeBreak string
-			fmt.Scan(&takeBreak)
-
+			focus := nextSession("FOCUS")
 			ui.DeleteLines()
-			if takeBreak != "y" {
-				stop = 1
-				break
-			} else {
+			if focus {
 				StartSession("FOCUS", t.Break)
 				initial = 1
+
+			} else {
+				stop = 1
+				break
 			}
 
 		} else {
 			StartSession("FOCUS", t.Focus)
 			initial = initial + 1
 		}
-		fmt.Println("\n do you want to take a break? (y/n) ")
-		var takeBreak string
-		fmt.Scan(&takeBreak)
 
+		break_session := nextSession("BREAK")
 		ui.DeleteLines()
-		if takeBreak != "y" {
-			stop = 1
-			break
-		} else {
+		if break_session {
 			StartSession("BREAK", t.Break)
 			initial = 1
+
+		} else {
+			focus_session := nextSession("FOCUS")
+			ui.DeleteLines()
+			if focus_session {
+				StartSession("FOCUS", t.Focus)
+			} else {
+				break
+
+			}
+
 		}
 	}
+}
+
+func nextSession(label string) bool {
+	fmt.Print("\n")
+	if label == "FOCUS" {
+		fmt.Printf("do you want to start another focus session? (y / n)\n")
+	} else if label == "BREAK" {
+		fmt.Printf("do you want to take a break (y / n)?\n")
+	}
+
+	var decision string
+	fmt.Scanln(&decision)
+
+	if decision == "y" {
+		return true
+	}
+
+	return false
 }
