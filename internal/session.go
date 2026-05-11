@@ -13,7 +13,7 @@ import (
 // - ensuring that time elapsed and the progress bar exist on different lines
 
 // StartSession starts a focus session with the given label and duration in minutes
-func StartSession(label string, durationMinutes uint64) {
+func StartSession(label string, durationMinutes uint64) (bool) {
 
 	total := time.Duration(durationMinutes) * time.Minute
 	start := time.Now()
@@ -49,5 +49,7 @@ func StartSession(label string, durationMinutes uint64) {
 		total,
 		width,
 	)
+
+	return true
 
 }

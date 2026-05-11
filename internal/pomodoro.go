@@ -5,6 +5,7 @@ import (
 
 	"github.com/AshwathSingh/pomodoro-cli/model"
 	"github.com/AshwathSingh/pomodoro-cli/ui"
+	"github.com/gen2brain/beeep"
 )
 
 // have to implement functionality to be able to interrupt pomodoro's to take a break
@@ -26,7 +27,7 @@ func PomodoroSession(t *model.Time) {
 			focus := nextSession("FOCUS")
 			ui.DeleteLines()
 			if focus {
-				StartSession("FOCUS", t.Break)
+				notifyEnd("FOCUS", t.Focus)
 				initial = 1
 
 			} else {
@@ -35,21 +36,28 @@ func PomodoroSession(t *model.Time) {
 			}
 
 		} else {
-			StartSession("FOCUS", t.Focus)
+			notifyEnd("FOCUS", t.Focus)
+
 			initial = initial + 1
 		}
 
 		break_session := nextSession("BREAK")
 		ui.DeleteLines()
+
+		// user has two options yes or no
+		// if yes selected then end the session
+
+		// if the user selects yes, then ask whether they would
+		// like to begin another focus session
 		if break_session {
-			StartSession("BREAK", t.Break)
+			notifyEnd("BREAK", t.Break)
 			initial = 1
 
 		} else {
 			focus_session := nextSession("FOCUS")
 			ui.DeleteLines()
 			if focus_session {
-				StartSession("FOCUS", t.Focus)
+				notifyEnd("FOCUS", t.Focus)
 			} else {
 				break
 
@@ -70,9 +78,22 @@ func nextSession(label string) bool {
 	var decision string
 	fmt.Scanln(&decision)
 
+	if decision != "y" || decision != "n" {
+		fmt.Printf("invalid entry, assuming ended")
+		return false
+	}
+
 	if decision == "y" {
 		return true
 	}
 
 	return false
+}
+
+func notifyEnd(label string, duration uint64) {
+	session := StartSession(label, duration)
+
+	if session {
+		beeep.Notify(label, "your session has been completed", "")
+	}
 }
