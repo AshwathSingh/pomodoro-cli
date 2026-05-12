@@ -6,6 +6,6 @@ I saw this pomodoro-cli tool in a BashBunni Stream and was really interested to 
 
 - [X] Refactor screen-building logic for UI into a separate function
 - [ ] Add functionality:
-  - [ ] Allow interrupting a focus session to switch between break and focus modes (partial implementation - currently able to cancel a session)
+  - [X] Allow interrupting a focus session to switch between break and focus modes (partial implementation - currently able to cancel a session)
   - [X] Add notification when a session is completed
   - [X] Enable infinite repetitions for both break and focus sessions
