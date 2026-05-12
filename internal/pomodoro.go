@@ -23,7 +23,9 @@ func PomodoroSession(t *model.Time) {
 			break
 		}
 
+		// checks if the user wants to continue with a break session
 		if !decisionNextSession(SessionBreak, t.Break) {
+			// if it returns as false, check if the user wants to continue with a focus PomodoroSession
 			if !decisionNextSession(SessionFocus, t.Focus) {
 				break
 			}
