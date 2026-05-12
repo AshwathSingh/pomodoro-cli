@@ -7,7 +7,6 @@ import (
 )
 
 // [TODO]
-// - multiple focus sessions
 // - ensuring breaks and focus sessions can be interrupted and set to former or latter
 // - addding task functionality (novelty feature not really core feature)
 // - ensuring that time elapsed and the progress bar exist on different lines
