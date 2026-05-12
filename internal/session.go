@@ -1,10 +1,6 @@
 package internal
 
 import (
-	"bufio"
-	"fmt"
-	"os"
-	"strings"
 	"time"
 
 	"github.com/AshwathSingh/pomodoro-cli/ui"
@@ -16,9 +12,7 @@ import (
 // - ensuring that time elapsed and the progress bar exist on different lines
 
 // StartSession starts a focus session with the given label and duration in minutes
-// It listens for user input and will interrupt the session early if the user
-// enters 'q' (case-insensitive) followed by Enter.
-func StartSession(label string, durationMinutes uint64) bool {
+func StartSession(label string, durationMinutes uint64) (bool) {
 
 	total := time.Duration(durationMinutes) * time.Minute
 	start := time.Now()
@@ -26,33 +20,12 @@ func StartSession(label string, durationMinutes uint64) bool {
 	width := 30
 	startStr := start.Format("15:04")
 
-	// Channel used to signal an interrupt from the input goroutine
-	stopCh := make(chan struct{})
-
-	// Start goroutine to listen for 'q' input to interrupt the session.
-	go func() {
-		reader := bufio.NewReader(os.Stdin)
-		for {
-			input, err := reader.ReadString('\n')
-			if err != nil {
-				// On error (including EOF), stop listening
-				return
-			}
-			trim := strings.TrimSpace(input)
-			if strings.EqualFold(trim, "q") {
-				close(stopCh)
-				return
-			}
-		}
-	}()
-
 	for {
 		elapsed := time.Since(start)
 
 		if elapsed >= total {
 			break
 		}
-
 		// clear the line and render the progress bar
 		// pritning the elasped time left
 		// may have to rework the naming conventions
