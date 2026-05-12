@@ -14,26 +14,17 @@ func PomodoroSession(t *model.Time) {
 		panic("nil Time passed to PomodoroSession")
 	}
 
-	// initial is a variable to ensure first focus session runs uninterrupted
-	var initial int8 = 0
+
+	notifyEnd(SessionFocus, t.Focus)
 
 	for {
-		if initial == 1 {
-			// checks if the user wants to continue with a focus session
-			decisionContinue := decisionNextSession("FOCUS", t.Focus)
-			if !decisionContinue {
-				break
-			}
-		} else {
-			notifyEnd("FOCUS", t.Focus)
-			initial = initial + 1
+		// checks if the user wants to continue with a focus session
+		if !decisionNextSession(SessionFocus, t.Focus) {
+			break
 		}
 
-		// checks if user want to continue with a break session
-		decisionContinue := decisionNextSession("BREAK", t.Break)
-
-		if !decisionContinue {
-			if !decisionNextSession("FOCUS", t.Focus) {
+		if !decisionNextSession(SessionBreak, t.Break) {
+			if !decisionNextSession(SessionFocus, t.Focus) {
 				break
 			}
 		}
