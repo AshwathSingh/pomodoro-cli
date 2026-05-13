@@ -21,10 +21,13 @@ func decisionNextSession(label string, duration uint64) bool {
 
 func nextSession(label string) bool {
 	fmt.Print("\n")
-	if label == "FOCUS" {
+	switch label {
+	case SessionFocus:
 		fmt.Printf("do you want to start another focus session? (y / n)\n")
-	} else if label == "BREAK" {
+	case SessionBreak:
 		fmt.Printf("do you want to take a break (y / n)?\n")
+	default:
+		panic("hey, this isn't a label I know how to deal with")
 	}
 
 	var decision string
