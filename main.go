@@ -9,13 +9,13 @@ import (
 	"github.com/AshwathSingh/pomodoro-cli/ui"
 )
 
-// initialize timeFocus and timeBreak variables
-// TODO - implement this as a struct with functions to access the
-// variables as good practice
 
 func main() {
 
-	pomodoro := model.Time{Focus: 0, Break: 0}
+	// refactoring of time into a pomodoro object
+	pomodoroObject := model.Pomodoro{}
+	pomodoroObject.InitialisePomodoro()
+
 	// menu to select focus session type
 	fmt.Printf("(1) 25 / 5 \n(2) 50 / 10 \n(3) custom\n")
 	var inputOption int
@@ -33,18 +33,18 @@ func main() {
 	// switch statement to set focus and break based on user input
 	switch inputOption {
 	case 1:
-		pomodoro.SetFocus(25)
-		pomodoro.SetBreak(5)
+		pomodoroObject.SetFocus(25)
+		pomodoroObject.SetBreak(5)
 		ui.ClearScreen()
 	case 2:
-		pomodoro.SetFocus(50)
-		pomodoro.SetBreak(10)
+		pomodoroObject.SetFocus(50)
+		pomodoroObject.SetBreak(10)
 		ui.ClearScreen()
 	case 3:
-		ui.CustomInput(&pomodoro)
+		ui.CustomInput(&pomodoroObject)
 	default:
 		log.Fatal("invalid option")
 	}
 
-	internal.PomodoroSession(&pomodoro)
+	internal.PomodoroSession(&pomodoroObject)
 }

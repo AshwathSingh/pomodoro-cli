@@ -7,26 +7,26 @@ import (
 // have to implement functionality to be able to interrupt pomodoro's to take a break
 // additionally have the sessions running infinitely until a specifc combiniation is pressed
 // has to be implemented
-func PomodoroSession(t *model.Time) {
+func PomodoroSession(pomodoro *model.Pomodoro) {
 	// clear the screen and start the focus session
 
-	if t == nil {
+	if pomodoro == nil {
 		panic("nil Time passed to PomodoroSession")
 	}
 
 
-	notifyEnd(SessionFocus, t.Focus)
+	notifyEnd(SessionFocus, pomodoro.Split.Focus)
 
 	for {
 		// checks if the user wants to continue with a focus session
-		if !decisionNextSession(SessionFocus, t.Focus) {
+		if !decisionNextSession(SessionFocus, pomodoro.Split.Focus) {
 			break
 		}
 
 		// checks if the user wants to continue with a break session
-		if !decisionNextSession(SessionBreak, t.Break) {
+		if !decisionNextSession(SessionBreak, pomodoro.Split.Break) {
 			// if it returns as false, check if the user wants to continue with a focus PomodoroSession
-			if !decisionNextSession(SessionFocus, t.Focus) {
+			if !decisionNextSession(SessionFocus, pomodoro.Split.Focus) {
 				break
 			}
 		}
