@@ -2,6 +2,15 @@
 
 I saw this pomodoro-cli tool in a BashBunni Stream and was really interested to make one, and at this time I was learning Go so I thought it was a perfect moment to implement some of the knowledge I have been learning
 
+# How to Run this project 
+
+```
+go build -o pomodoro-cli
+./pomodoro-cli
+```
+
+And then you should see an optioon to select the time session you would like to focus and rest for
+
 # List Of Features
 
 - [X] Refactor screen-building logic for UI into a separate function
