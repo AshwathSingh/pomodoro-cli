@@ -11,16 +11,16 @@ import (
 // function for case 3 of input, wherein the user wants to use a custom focus session
 // takes in a pointer to internal.Time to update values in the caller
 // to be implemented: further validation on inputs
-func CustomInput(pomodoro *model.Time) {
+func CustomInput(pomodoro *model.Pomodoro) {
 	DeleteLines()
 	fmt.Print("\033[F\033[K")
 
 	fmt.Println("Custom Pomodoro Set-Up")
 	fmt.Println("how long do you want to focus for?")
-	fmt.Scan(&pomodoro.Focus)
+	fmt.Scan(&pomodoro.Split.Focus)
 
 	fmt.Println("how long do you want to rest for?")
-	fmt.Scan(&pomodoro.Break)
+	fmt.Scan(&pomodoro.Split.Break)
 
 	DeleteLines()
 	ClearScreen()

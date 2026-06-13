@@ -2,23 +2,25 @@ package internal
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/AshwathSingh/pomodoro-cli/ui"
 )
 
 // [TODO]
-// - ensuring breaks and focus sessions can be interrupted and set to former or latter
 // - addding task functionality (novelty feature not really core feature)
 // - ensuring that time elapsed and the progress bar exist on different lines
 
-// StartSession starts a focus session with the given label and duration in minutes
+// StartSession starts a focus session with the given label and duration in minutes.
 // It listens for user input and will interrupt the session early if the user
-// types 'q' (case-insensitive) and presses Enter.
-func StartSession(label string, durationMinutes uint64) (bool) {
+// types 'q' (case-insensitive) and presses Enter. The provided context can be used
+// to cancel the session externally.
+func StartSession(ctx context.Context, label string, durationMinutes uint64) bool {
 
 	total := time.Duration(durationMinutes) * time.Minute
 	start := time.Now()
@@ -28,11 +30,22 @@ func StartSession(label string, durationMinutes uint64) (bool) {
 
 	// Channel used to signal an interrupt from the input goroutine
 	stopCh := make(chan struct{})
+	var wg sync.WaitGroup
 
 	// Start goroutine to listen for 'q' input to interrupt the session.
+	wg.Add(1)
 	go func() {
+		defer wg.Done()
 		reader := bufio.NewReader(os.Stdin)
 		for {
+			// Use a non-blocking check for context cancellation
+			select {
+			case <-ctx.Done():
+				return
+			default:
+			}
+
+			// Set read deadline based on context or timeout
 			input, err := reader.ReadString('\n')
 			if err != nil {
 				// On error (including EOF), stop listening
@@ -40,11 +53,22 @@ func StartSession(label string, durationMinutes uint64) (bool) {
 			}
 			trim := strings.TrimSpace(input)
 			if strings.EqualFold(trim, "q") {
-				close(stopCh)
+				select {
+				case <-stopCh:
+					// Already closed, avoid double close panic
+				default:
+					close(stopCh)
+				}
 				return
 			}
 		}
 	}()
+
+	// Create a channel for the timer tick
+	ticker := time.NewTicker(100 * time.Millisecond)
+	defer ticker.Stop()
+
+	interrupted := false
 
 	for {
 		elapsed := time.Since(start)
@@ -62,12 +86,11 @@ func StartSession(label string, durationMinutes uint64) (bool) {
 			width,
 		)
 
-		// Wait either for the short tick or an interrupt
+		// Wait either for context cancellation, session interrupt, or a tick
 		select {
-		case <-stopCh:
-			// delete the previous progress line so the interrupted state is shown cleanly
+		case <-ctx.Done():
+			// Context cancelled externally (e.g., Ctrl+C)
 			fmt.Print("\033[F\033[K")
-			// interrupted by user, print final state at current elapsed and return false
 			ui.PrintProgress(
 				label,
 				startStr,
@@ -76,10 +99,35 @@ func StartSession(label string, durationMinutes uint64) (bool) {
 				total,
 				width,
 			)
-			return false
-		case <-time.After(100 * time.Millisecond):
-			// continue loop
+			interrupted = true
+			break
+		case <-stopCh:
+			// Interrupted by user typing 'q'
+			fmt.Print("\033[F\033[K")
+			ui.PrintProgress(
+				label,
+				startStr,
+				(total - elapsed),
+				elapsed,
+				total,
+				width,
+			)
+			interrupted = true
+			break
+		case <-ticker.C:
+			// Continue loop
 		}
+
+		if interrupted {
+			break
+		}
+	}
+
+	// Wait for input goroutine to finish
+	wg.Wait()
+
+	if interrupted {
+		return false
 	}
 
 	// final state
@@ -93,5 +141,4 @@ func StartSession(label string, durationMinutes uint64) (bool) {
 	)
 
 	return true
-
 }
