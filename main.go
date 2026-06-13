@@ -1,19 +1,38 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/AshwathSingh/pomodoro-cli/internal"
 	"github.com/AshwathSingh/pomodoro-cli/model"
 	"github.com/AshwathSingh/pomodoro-cli/ui"
 )
 
-
 func main() {
+
+	// Set up signal handling for graceful shutdown (Ctrl+C)
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+
+	// Create a context that can be cancelled on signal
+	ctx, cancel := context.WithCancel(context.Background())
+
+	// Handle signals in a goroutine
+	go func() {
+		<-sigChan
+		fmt.Println("\nShutting down gracefully...")
+		cancel()
+	}()
 
 	// refactoring of time into a pomodoro object
 	pomodoroObject := model.Pomodoro{}
+
+	// initialsing the pomodoroObject with initialiser
 	pomodoroObject.InitialisePomodoro()
 
 	// menu to select focus session type
@@ -46,5 +65,5 @@ func main() {
 		log.Fatal("invalid option")
 	}
 
-	internal.PomodoroSession(&pomodoroObject)
+	internal.PomodoroSession(ctx, &pomodoroObject)
 }
