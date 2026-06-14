@@ -12,10 +12,6 @@ import (
 	"github.com/AshwathSingh/pomodoro-cli/ui"
 )
 
-// [TODO]
-// - addding task functionality (novelty feature not really core feature)
-// - ensuring that time elapsed and the progress bar exist on different lines
-
 // StartSession starts a focus session with the given label and duration in minutes.
 // It listens for user input and will interrupt the session early if the user
 // types 'q' (case-insensitive) and presses Enter. The provided context can be used

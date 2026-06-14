@@ -24,7 +24,7 @@ func decisionNextSession(ctx context.Context, label string, duration uint64) boo
 
 }
 
-func nextSession(ctx context.Context, label string) (bool, error) {
+func nextSession(label string) (bool, error) {
 	fmt.Print("\n")
 
 	if label == SessionFocus {
