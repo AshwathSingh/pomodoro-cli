@@ -14,7 +14,7 @@ And then you should see an optioon to select the time session you would like to 
 # List Of Features
 
 - [X] Refactor screen-building logic for UI into a separate function
-- [ ] Add functionality:
+- [X] Add functionality:
   - [X] Allow interrupting a focus session to switch between break and focus modes (partial implementation - currently able to cancel a session)
   - [X] Add notification when a session is completed
   - [X] Enable infinite repetitions for both break and focus sessions

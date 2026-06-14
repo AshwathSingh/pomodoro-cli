@@ -41,14 +41,41 @@ func PrintProgress(label string, startStr string, countdown time.Duration, elaps
 	)
 }
 
-// RenderBar renders a progress bar with the given progress and width
+// RenderBar renders a smooth progress bar with fractional blocks
+// Uses Unicode block characters to show fine-grained progress
 func renderBar(progress float64, width int) string {
-	filled := int(progress * float64(width))
+	// Fractional block characters: higher indices = more filled
+	blocks := []string{" ", "▏", "▎", "▍", "▌", "▋", "▊", "▉", "█"}
 
-	bar := strings.Repeat("█", filled) +
-		strings.Repeat("░", width-filled)
+	filledWidth := progress * float64(width)
+	fullBlocks := int(filledWidth)
+	fractionPart := filledWidth - float64(fullBlocks)
 
-	return "[" + bar + "]"
+	var bar strings.Builder
+	bar.WriteString("[")
+
+	// Write full blocks
+	for i := 0; i < fullBlocks; i++ {
+		bar.WriteString("█")
+	}
+
+	// Write fractional block if we have one
+	if fullBlocks < width {
+		fractionIndex := int(fractionPart * float64(len(blocks)-1))
+		if fractionIndex >= len(blocks) {
+			fractionIndex = len(blocks) - 1
+		}
+		bar.WriteString(blocks[fractionIndex])
+		fullBlocks++
+	}
+
+	// Write empty blocks
+	for i := fullBlocks; i < width; i++ {
+		bar.WriteString(" ")
+	}
+
+	bar.WriteString("]")
+	return bar.String()
 }
 
 // DeleteLines deletes two lines from the terminal
